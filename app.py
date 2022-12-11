@@ -1,3 +1,5 @@
 from game import Game
 
-Game().start()
+g = Game()
+g.start_screen()
+g.start()
