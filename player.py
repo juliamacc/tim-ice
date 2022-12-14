@@ -7,8 +7,9 @@ class Player(pg.sprite.Sprite):
     def __init__(self, pos = None):
         pg.sprite.Sprite.__init__(self)
         self.sprites = []
-        self.sprites.append(pg.image.load('sprite/avatar01 (red).png'))
-        self.sprites.append(pg.image.load('sprite/avatar03 (red).png'))
+        self.sprites.append(pg.image.load('sprite/avatar01_red.png'))
+        self.sprites.append(pg.image.load('sprite/avatar03_red.png'))
+
         self.atual = 0
         self.image = self.sprites[self.atual]
         self.image = pg.transform.scale(self.image, (16*2.5, 40))

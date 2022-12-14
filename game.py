@@ -1,25 +1,27 @@
 import pygame as pg
-#from map import Map
+from map import Map
 from player import Player
-import sprite
 import os
 
-class Game:
+class Game:    
     def __init__(self):
         pg.init()
         #pg.mixer.init()
-        f = 32
-        self.running = False
+
         self.screen_size = (600, 600)
-        #self.map = Map()
-        #self.player = Player()
+        self.running = False
+        self.points = 0
+        self.level = 0
+
+        self.all_sprites = pg.sprite.Group()
         self.clock = pg.time.Clock()
         self.screen = pg.display.set_mode(self.screen_size)
         self.font = pg.font.match_font('arial')
-        self.load_files()
 
-        self.points = 0
-        self.level = 0
+        self.map = Map()
+        self.player = None
+
+        self.load_files()
 
         pg.display.set_caption('Tim Ice')
     
@@ -27,45 +29,38 @@ class Game:
         self.running = False
     
     def start(self):
-        self.all_sprites = pg.sprite.Group()
         self.running = True
+        self.map.set_level(2)
+
+        self.spawn_player()
+
         self.__loop()
+    
+    def spawn_player(self):
+        pos = self.map.player_spawn_pos
+
+        self.player = Player(pos)
+
+        self.all_sprites.add(self.player)
     
     def __loop(self):
         while self.running:
             self.__update()
+            self.__draw()
     
     def __update(self):
-
-        largura_bloco = 50
-        altura_bloco = 50
-
-        #x = 100
-        #y = 100
-
-        x_chegada = 350
-        y_chegada = 350
-
         self.clock.tick(30)
 
+        self.events()
+
+        self.all_sprites.update()
+
+    def __draw(self):
         self.screen.fill((50, 51, 82))
-        #mensagem = f'Level: {self.level}'
-        #texto_formatado = self.font.render(mensagem, True, (255,255,255))
 
-        self.update_sprites()
-        self.draw_sprites()
+        self.map.draw(self.screen)
 
-        boneco = pg.draw.rect(self.screen, (255,0,0), (x,y,40,40))
-        chegada = pg.draw.rect(self.screen, (0,0,255), (x_chegada,y_chegada,40,40))
-
-        # COLISÃO
-        if boneco.colliderect(chegada):
-            x = 100
-            y = 100
-    #       x_chegada = randint(40,600)
-    #       y_chegada = randint(50,430)
-            pontos = pontos + 1
-       # self.screen.blit(texto_formatado, (30,650))
+        self.all_sprites.draw(self.screen)
 
         pg.display.update()
 
@@ -84,13 +79,6 @@ class Game:
                     y = y - 50
                 if event.key == pg.K_s:
                     y = y + 50
-    
-    def update_sprites(self):
-        self.all_sprites.update()
-    
-    def draw_sprites(self):
-        self.all_sprites.draw(self.screen)
-        pg.display.flip()
 
     def load_files(self):
         images_folder = os.path.join(os.getcwd(), 'sprite')
@@ -99,7 +87,7 @@ class Game:
         #self.timice_logo = os.path.join(images_folder, 'title.png')
         #self.timice_logo = pg.image.load(self.timice_logo).convert()
         #self.timice_logo = pg.transform.scale(self.timice_logo, (306, 84))
-        self.timice_screen = os.path.join(images_folder, 'titlescreen (500x600).png')
+        self.timice_screen = os.path.join(images_folder, 'titlescreen.png')
         self.timice_screen = pg.image.load(self.timice_screen).convert()
 
     def show_text(self, text, size, color, x, y):

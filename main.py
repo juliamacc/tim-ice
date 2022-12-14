@@ -10,7 +10,7 @@ pygame.init()
 #musica_fundo = pygame.mixer.music.load('')
 #pygame.mixer.music.play(-1)a
 
-largura = 500
+largura = 600
 altura = 600
 
 largura_bloco = 50
