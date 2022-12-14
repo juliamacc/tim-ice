@@ -99,4 +99,4 @@ while True:
 
     tela.blit(texto_formatado, (30,650))
 
-    pygame.display.flip()
+    pygame.display.update()
