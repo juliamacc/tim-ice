@@ -3,14 +3,15 @@ from pygame.locals import *
 from sys import exit
 from random import randint
 
+
 pygame.init()
 
 #pygame.mixer.music.set_volume(0.03)
 #musica_fundo = pygame.mixer.music.load('')
 #pygame.mixer.music.play(-1)a
 
-largura = 600
-altura = 700
+largura = 500
+altura = 600
 
 largura_bloco = 50
 altura_bloco = 50
@@ -18,24 +19,45 @@ altura_bloco = 50
 x = 100
 y = 100
 
-x_chegada = 450
-y_chegada = 450
+x_chegada = 350
+y_chegada = 350
 
 pontos = 0
 fonte = pygame.font.SysFont('arial', 30, True, True)
 
 
 tela = pygame.display.set_mode((largura, altura))
-pygame.display.set_caption('Projeto Final')
+pygame.display.set_caption('Tim Ice')
 relogio = pygame.time.Clock()
 
+class Player(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        self.sprites = []
+        self.sprites.append(pygame.image.load('sprite/avatar01 (red).png'))
+        self.sprites.append(pygame.image.load('sprite/avatar03 (red).png'))
+        self.atual = 0
+        self.image = self.sprites[self.atual]
+        self.image = pygame.transform.scale(self.image, (16*2.5, 40))
+
+        self.rect = self.image.get_rect()
+        self.rect.topleft = x, y
+
+
+    
+all_sprites = pygame.sprite.Group()
+player = Player()
+all_sprites.add(player)
 
 
 while True:
     relogio.tick(30)
-    tela.fill((158, 239, 241))
+    tela.fill((50, 51, 82))
     mensagem = f'Pintos: {pontos}'
     texto_formatado = fonte.render(mensagem, True, (255,255,255))
+
+    all_sprites.draw(tela)
+    all_sprites.update()
 
     for event in pygame.event.get():
         if event.type == QUIT:
@@ -68,13 +90,13 @@ while True:
     chegada = pygame.draw.rect(tela, (0,0,255), (x_chegada,y_chegada,40,40))
 
     # COLISÃO
-    if boneco.colliderect(chegada):
-        x = 100
-        y = 100
+    #if boneco.colliderect(chegada):
+     #   x = 100
+     #   y = 100
  #       x_chegada = randint(40,600)
  #       y_chegada = randint(50,430)
-        pontos = pontos + 1
+    #    pontos = pontos + 1
 
     tela.blit(texto_formatado, (30,650))
 
-    pygame.display.update()
+    pygame.display.flip()
