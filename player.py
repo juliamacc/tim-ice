@@ -1,7 +1,6 @@
 import pygame as pg
-from pygame.locals import *
-import sprite
 
+import config
 
 class Player(pg.sprite.Sprite):
     def __init__(self, pos = None):
@@ -16,23 +15,10 @@ class Player(pg.sprite.Sprite):
 
         if pos is None:
             pos = (100, 100)
-        self.pos = pg.Vector2(pos)
 
         self.rect = self.image.get_rect()
-        self.rect.topleft = self.pos
-
+        self.rect.topleft = pos
     
-    # def events(self):
-    #     for event in pg.event.get():
-    #         if event.type == pg.QUIT:
-    #          self.stop_running()
-    #         # Passos do boneco
-    #         elif event.type == pg.KEYDOWN:
-    #             if event.key == pg.K_a:
-    #                 xp = xp - 50
-    #             if event.key == pg.K_d:
-    #                 xp = xp + 50
-    #             if event.key == pg.K_w:
-    #                 yp = yp - 50
-    #             if event.key == pg.K_s:
-    #                 yp = yp + 50
+    def set_pos(self, pos):
+        self.rect.x = pos[0]
+        self.rect.y = pos[1]

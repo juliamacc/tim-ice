@@ -1,6 +1,6 @@
 import pygame as pg
 
-from tile import Background, BlueWall, PurpleWall, IceFloor, PlayerSpawn, HudBackground
+from tile import Water, BlueWall, PurpleFloor, Floor, PlayerSpawn, HudBackground
 import config
 
 #boneco começa no S
@@ -99,8 +99,8 @@ class Map:
                 "           www ",
                 "           wXw ",
                 "           wgw ",
-                "  wwwwwww  wgw ",
-                " wwgggggwwwwgw ",
+                "  wwwwwww wwgw ",
+                " wwgggggwwwggw ",
                 " wOggggggggggw ",
                 " wwwgggwgggggw ",
                 "   wwwwwwwwwww ",
@@ -114,9 +114,9 @@ class Map:
     tile_mapping = {
         "b": HudBackground,
         "w": BlueWall,
-        "g": IceFloor,
-        #"a": WaterFloor,
-        "X": PurpleWall,
+        "g": Floor,
+        "a": Water,
+        "X": PurpleFloor,
         "O": PlayerSpawn,
     }
 
@@ -126,11 +126,22 @@ class Map:
 
         self.__player_spawn_pos = None
     
+    def get_rounded_pos(self, x, y):
+        tile_x, tile_y = config.tile_size
+
+        return ((x // tile_x) * tile_x, (y // tile_y) * tile_y)
+    
+    def get_tile(self, x, y):
+        x, y = self.get_rounded_pos(x, y)
+
+        return self.tiles.get(y, {}).get(x)
+
+    
     def add_tile(self, tile):
         x, y = tile.pos
 
-        row = self.tiles.setdefault(x, {})
-        row[y] = tile
+        row = self.tiles.setdefault(y, {})
+        row[x] = tile
 
         self.tile_group.add(tile)
     
@@ -139,6 +150,8 @@ class Map:
         self.tiles.clear()
     
     def set_level(self, name):
+        self.clear_level()
+        
         map = self.levels.get(name)
 
         if not map:
@@ -147,10 +160,10 @@ class Map:
         tile_x, tile_y = config.tile_size
 
         for i, line in enumerate(map):
-            y = i * tile_x
+            y = i * tile_y
 
             for j, char in enumerate(line):
-                x = j * tile_y
+                x = j * tile_x
 
                 tile_type = self.tile_mapping.get(char)
 
@@ -172,8 +185,4 @@ class Map:
     @property
     def player_spawn_pos(self):
         return self.__player_spawn_pos
-
-
-
-
 

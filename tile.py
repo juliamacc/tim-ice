@@ -19,17 +19,18 @@ class Background(Tile):
 class HudBackground(Tile):
     default_image = pg.image.load('sprite/background_hud.png')
 
-class IceFloor(Tile):
-    default_image = pg.image.load('sprite/floor.png')
-
-class PlayerSpawn(IceFloor):
-    default_image = pg.image.load('sprite/floor.png')
-    
-class WaterFloor(Tile):
-    default_image = pg.image.load('sprite/floor_water.png')
-
 class BlueWall(Tile):
     default_image = pg.image.load('sprite/wall_blue.png')
 
-class PurpleWall(Tile):
-    default_image = pg.image.load('sprite/wall_purple.png')
+class Water(Tile):
+    default_image = pg.image.load('sprite/water.png')
+
+
+class Floor(Tile):
+    default_image = pg.image.load('sprite/floor.png')
+
+class PlayerSpawn(Floor):
+    default_image = pg.image.load('sprite/floor.png')
+    
+class PurpleFloor(Floor):
+    default_image = pg.image.load('sprite/floor_purple.png')
