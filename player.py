@@ -5,12 +5,12 @@ import config
 class Player(pg.sprite.Sprite):
     def __init__(self, pos = None):
         pg.sprite.Sprite.__init__(self)
-        self.sprites = []
-        self.sprites.append(pg.image.load('sprite/avatar01_red.png'))
-        self.sprites.append(pg.image.load('sprite/avatar03_red.png'))
+        self.sprites = {
+            "normal": pg.image.load('sprite/avatar01_red.png'),
+            "morto": pg.image.load('sprite/avatar03_red.png'),
+        }
 
-        self.atual = 0
-        self.image = self.sprites[self.atual]
+        self.image = self.sprites["normal"]
         self.image = pg.transform.scale(self.image, (16*2.5, 40))
 
         if pos is None:
@@ -22,3 +22,7 @@ class Player(pg.sprite.Sprite):
     def set_pos(self, pos):
         self.rect.x = pos[0]
         self.rect.y = pos[1]
+    
+    def set_dead(self):
+        self.image = self.sprites["morto"]
+        self.image = pg.transform.scale(self.image, (16*2.5, 40))

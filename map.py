@@ -135,6 +135,13 @@ class Map:
         x, y = self.get_rounded_pos(x, y)
 
         return self.tiles.get(y, {}).get(x)
+    
+    def get_adjacent_tiles(self, x, y):
+        tx, ty = config.tile_size
+
+        positions = ((x, y - ty), (x, y + ty), (x - tx, y), (x + tx, y))
+
+        return [self.get_tile(*pos) for pos in positions]
 
     
     def add_tile(self, tile):
