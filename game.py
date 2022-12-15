@@ -29,6 +29,7 @@ class Game:
             "start": self.start_state,
             "main": self.main_state,
             "game_over": self.game_over_state,
+            "victory": self.victory_state,
         }
 
         self.all_sprites = pg.sprite.Group()
@@ -56,7 +57,7 @@ class Game:
     
     def start(self):
         self.running = True
-        self.change_state("main")
+        self.change_state("start")
 
         self.__loop()
     
@@ -65,7 +66,7 @@ class Game:
             self.current_state()
 
 
-    def next_level(self):        
+    def next_level(self):    
         self.level += 1
 
         self.all_sprites.empty()
@@ -107,15 +108,16 @@ class Game:
 
         if isinstance(new_tile, Floor):
             self.player.set_pos(new_pos)
+            self.points += 1
 
             self.map.add_tile(Water(pos=(x, y)))
 
             play_sound(os.path.join(self.audios_folder, 'steps.wav'), 0.1)
         
         if isinstance(new_tile, PurpleFloor):
-            self.next_level()
-            
-            play_sound(os.path.join(self.audios_folder, 'levelup.wav'))
+            if self.level + 1 in self.map.levels:
+                self.next_level()
+                play_sound(os.path.join(self.audios_folder, 'levelup.wav'))
     
     def is_player_dead(self):
         x, y = self.player.rect.topleft
@@ -141,12 +143,16 @@ class Game:
         return pg.font.Font("DigitalDisco.ttf", size)
 
 
-    def show_text(self, text, size, color, x, y):
+    def show_text(self, text, size, color, x, y, centered=True):
         font = self.get_font(size)
         
         text = font.render(text, True, color)
         text_rect = text.get_rect()
-        text_rect.midtop = (x, y)
+
+        if centered:
+            text_rect.midtop = (x, y)
+        else:
+            text_rect.topleft = (x, y)
 
         self.screen.blit(text, text_rect)
 
@@ -171,11 +177,16 @@ class Game:
 
     def main_state(self):
         self.level = 0
+        self.points = 0
         self.next_level()
 
         while self.running:
             # check if player died
             if self.is_player_dead():
+                if not self.level + 1 in self.map.levels:
+                    self.change_state("victory")
+                    break
+
                 self.player.set_dead()
                 self.change_state("game_over")
                 break
@@ -191,6 +202,9 @@ class Game:
         
             self.map.draw(self.screen)
             self.all_sprites.draw(self.screen)
+
+            self.show_text(f"Level: {self.level}", 30, "#ffffff", 30, 50, centered=False)
+            self.show_text(f"Points: {self.points}", 30, "#ffffff", 450, 50, centered=False)
 
             pg.display.update()
 
@@ -218,12 +232,28 @@ class Game:
 
         pg.display.update()
 
-        #timice_dead = pg.transform.scale(self.timice_dead, (60, 60))
+    def victory_state(self):
+        play_sound(os.path.join(self.audios_folder, 'win.wav'))
+        
+        self.show_victory_screen(300, 300)
 
-        #rect = timice_dead.get_rect()
-        #rect.midtop = (x, y)
+        self.wait()
 
-        #self.screen.blit(self.timice_dead, rect)
+        self.change_state("start")
+        
+
+    def show_victory_screen(self, x, y):
+        self.screen.fill((50, 51, 82))
+
+        self.map.draw(self.screen)
+        self.all_sprites.draw(self.screen)
+
+        self.show_text('VICTORY', 60, (255, 255, 153), 300, 75)
+        self.show_text('Ganhaste, otario', 20, (255, 255, 153), 300, 135)
+
+        self.show_text('Press any key to return', 30, (255,255,255), 300, 500)
+
+        pg.display.update()
 
 
     def wait(self, *keys):
