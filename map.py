@@ -3,7 +3,6 @@ import pygame as pg
 from tile import Water, BlueWall, PurpleFloor, Floor, PlayerSpawn, HudBackground
 import config
 
-#boneco começa no S
 
 class Map:
     levels = {
@@ -120,7 +119,7 @@ class Map:
         "O": PlayerSpawn,
     }
 
-    def __init__(self, ):
+    def __init__(self):
         self.tiles = {}
         self.tile_group = pg.sprite.Group()
 

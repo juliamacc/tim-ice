@@ -128,11 +128,8 @@ class Game:
     def load_files(self):
         images_folder = os.path.join(os.getcwd(), 'sprite')
         self.audios_folder = os.path.join(os.getcwd(), 'audio')
-        #self.level_sound = os.path.join(audios_folder, 'levelup.wav')
         self.timice_screen = os.path.join(images_folder, 'titlescreen.png')
         self.timice_screen = pg.image.load(self.timice_screen).convert()
-        self.timice_dead = os.path.join(images_folder, 'avatar03_red.png')
-        self.timice_dead = pg.image.load(self.timice_dead).convert()
 
     def get_font(self, size):
         return pg.font.Font("DigitalDisco.ttf", size)
@@ -181,6 +178,7 @@ class Game:
             # check if player won
             if isinstance(player_tile, PurpleFloor):
                 if self.map.has_level(self.level + 1):
+                    play_sound(os.path.join(self.audios_folder, 'levelup.wav'))
                     self.next_level()
                 else:
                     self.change_state("victory")
@@ -204,8 +202,8 @@ class Game:
             self.map.draw(self.screen)
             self.all_sprites.draw(self.screen)
 
-            self.show_text(f"Level: {self.level}", 30, "#ffffff", 30, 50, centered=False)
-            self.show_text(f"Points: {self.points}", 30, "#ffffff", 450, 50, centered=False)
+            self.show_text(f"Level: {self.level}", 30, "#ffffff", 30, 8, centered=False)
+            self.show_text(f"Points: {self.points}", 30, "#ffffff", 450, 8, centered=False)
 
             pg.display.update()
 
@@ -226,10 +224,10 @@ class Game:
         self.map.draw(self.screen)
         self.all_sprites.draw(self.screen)
 
-        self.show_text('GAME OVER', 60, (255,127,127), 300, 75)
-        self.show_text('Perdeste, otario', 20, (255,127,127), 300, 135)
+        self.show_text('GAME OVER', 60, (255,127,127), 300, 70)
+        self.show_text('Perdeste, otario', 20, (255,127,127), 300, 120)
 
-        self.show_text('Press any key to restart', 30, (255,255,255), 300, 500)
+        self.show_text('Press any key to restart', 30, (255,255,255), 300, 490)
 
         pg.display.update()
 
