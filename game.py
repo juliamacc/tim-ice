@@ -113,11 +113,6 @@ class Game:
             self.map.add_tile(Water(pos=(x, y)))
 
             play_sound(os.path.join(self.audios_folder, 'steps.wav'), 0.1)
-        
-        if isinstance(new_tile, PurpleFloor):
-            if self.level + 1 in self.map.levels:
-                self.next_level()
-                play_sound(os.path.join(self.audios_folder, 'levelup.wav'))
     
     def is_player_dead(self):
         x, y = self.player.rect.topleft
@@ -181,12 +176,18 @@ class Game:
         self.next_level()
 
         while self.running:
-            # check if player died
-            if self.is_player_dead():
-                if not self.level + 1 in self.map.levels:
+            player_tile = self.map.get_tile(*self.player.rect.topleft)
+
+            # check if player won
+            if isinstance(player_tile, PurpleFloor):
+                if self.map.has_level(self.level + 1):
+                    self.next_level()
+                else:
                     self.change_state("victory")
                     break
 
+            # check if player died
+            if self.is_player_dead():
                 self.player.set_dead()
                 self.change_state("game_over")
                 break

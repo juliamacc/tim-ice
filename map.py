@@ -156,6 +156,9 @@ class Map:
         self.tile_group.empty()
         self.tiles.clear()
     
+    def has_level(self, name):
+        return name in self.levels
+    
     def set_level(self, name):
         self.clear_level()
         
